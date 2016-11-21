@@ -26,7 +26,7 @@ public class Client {
                 byte[] data = new byte[32 * 1024];
                 int readBytes = in.read(data);
 
-                System.out.printf("Server> %s", new String(data, 0, readBytes));
+                System.out.printf("MessengerServer> %s", new String(data, 0, readBytes));
 
             }
 
