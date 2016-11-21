@@ -5,6 +5,14 @@ package track.messenger.messages;
  */
 public class MessageProcessor {
     public void process(Message message) {
-        //todo
+        switch (message.getType()) {
+            case MSG_TEXT:
+                processText(message);
+        }
+    }
+
+    private void processText(Message message) {
+        TextMessage textMessage = (TextMessage) message;
+
     }
 }
