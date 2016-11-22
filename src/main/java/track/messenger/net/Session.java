@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class Session {
      */
 
     static final Logger logger = LoggerFactory.getLogger(Session.class);
-    private User user;
+    public User user;
 
     // сокет на клиента
     private Socket socket;
@@ -67,25 +68,28 @@ public class Session {
 
     }
 
-    public void process() {
-        byte[] data;
-        Message message = null;
-        try {
-            data = new byte[2048];
-            in.read(data);
-            message = protocol.decode(data);
-        } catch (IOException e) {
-            close();
-            logger.info("Socket " + socket + " of user " + user + " disconnected");
-        } catch (ProtocolException e) {
-            logger.info("Protocol exception. Socket: " + socket + "\n Message: " + e.getMessage());
-        }
-        if (message != null) {
-            processor.process(message);
-        }
+    public void read(byte[] data) throws IOException {
+        in.read(data);
+    }
+
+    public Message decode(byte[] data) throws ProtocolException {
+        return protocol.decode(data);
     }
 
     public boolean isConnected() {
         return connected;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+
+    public void process(Message message, ConcurrentHashMap<Long, Session> idToSession) {
+        processor.process(message, idToSession);
+    }
+
+    public boolean hasUser() {
+        return user != null;
     }
 }

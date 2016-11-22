@@ -8,6 +8,8 @@ import java.util.Objects;
 public class TextMessage extends Message {
     private String text;
 
+    private long chatId;
+
     public String getText() {
         return text;
     }
@@ -41,5 +43,9 @@ public class TextMessage extends Message {
         return "TextMessage{" +
                 "text='" + text + '\'' +
                 '}';
+    }
+
+    public long getChatId() {
+        return chatId;
     }
 }
