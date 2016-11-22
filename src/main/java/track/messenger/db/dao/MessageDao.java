@@ -1,7 +1,7 @@
 package track.messenger.db.dao;
 
+import track.messenger.db.model.Message;
 import track.messenger.db.model.User;
-import track.messenger.messages.Message;
 
 import java.util.List;
 
