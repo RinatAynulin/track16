@@ -3,6 +3,8 @@ package track.messenger.messages;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import track.messenger.db.exceptions.DbException;
+import track.messenger.db.exceptions.DuplicateException;
 import track.messenger.db.model.Chat;
 import track.messenger.db.model.User;
 import track.messenger.db.services.DbService;
@@ -27,6 +29,12 @@ public class MessageProcessor {
         switch (message.getType()) {
             case MSG_TEXT:
                 processText(message, idToSession);
+                break;
+            case MSG_REGISTRATION:
+                processRegistration(message);
+                break;
+            case MSG_LOGIN:
+                processLogin(message, idToSession);
                 break;
             default:
                 break;
@@ -53,6 +61,8 @@ public class MessageProcessor {
                     if (idToSession.contains(user.getId())) { //user is online
                         try {
                             idToSession.get(user.getId()).send(textMessage);
+                            /* todo add field delivered in db and at this point
+                             set that the message is delivered to this user */
                         } catch (ProtocolException e) {
                             logger.error("ProtocolException during sending message to " + user + ". " + e.getMessage());
                         } catch (IOException e) {
@@ -63,5 +73,34 @@ public class MessageProcessor {
             }
         }
 
+    }
+
+    private void processRegistration(Message message) {
+        RegistrationMessage registrationMessage = (RegistrationMessage) message;
+        User user = new User(registrationMessage.getUsername(), registrationMessage.getPassword());
+        try {
+            DbService.getInstance().getUserService().persist(user);
+        } catch (DuplicateException e) {
+            logger.error("User with username + " + user.getUsername() + " already exists");
+            // todo send message to user about this
+        }
+    }
+
+    private void processLogin(Message message, ConcurrentHashMap<Long, Session> idToSession) {
+        LoginMessage loginMessage = (LoginMessage) message;
+        User user;
+        try {
+            user = DbService.getInstance().getUserService().findByUsername(loginMessage.getUsername());
+            if (user == null) {
+                // todo send message to user about this
+            } else if (!user.getPassword().equals(loginMessage.getPassword())) {
+                // todo send message to user about this
+            } else {
+                // ok
+                // todo send id to user
+            }
+        } catch (DbException e) {
+            // todo end message to user about this
+        }
     }
 }
