@@ -16,6 +16,7 @@ public abstract class Service<T, L extends Serializable> {
     }
 
     public void persist(T entity) {
+        //todo add try block and rethrow DbException
         dao.openSessionWithTransaction();
         dao.persist(entity);
         dao.closeSessionWithTransaction();

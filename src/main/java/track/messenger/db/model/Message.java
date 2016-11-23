@@ -17,13 +17,11 @@ public class Message {
     @Column(name = "text", updatable = false)
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User sender;
+    @Column(name = "sender_id", updatable = false)
+    private long senderId;
 
-    @ManyToOne
-    @JoinColumn(name = "chat_id")
-    private Chat chat;
+    @Column(name = "chat_id", updatable = false)
+    private long chatId;
 
     @Column(name = "timestamp", updatable = false)
     private long timestamp;
@@ -31,18 +29,18 @@ public class Message {
     public Message() {
     }
 
-    public Message(String text, User sender, Chat chat, long timestamp) {
+    public Message(String text, long senderId, long chatId, long timestamp) {
         this.text = text;
-        this.sender = sender;
-        this.chat = chat;
+        this.senderId = senderId;
+        this.chatId = chatId;
         this.timestamp = timestamp;
     }
 
-    public Message(long id, String text, User sender, Chat chat, long timestamp) {
+    public Message(long id, String text, long senderId, long chatId, long timestamp) {
         this.id = id;
         this.text = text;
-        this.sender = sender;
-        this.chat = chat;
+        this.senderId = senderId;
+        this.chatId = chatId;
         this.timestamp = timestamp;
     }
 
@@ -62,20 +60,20 @@ public class Message {
         this.text = text;
     }
 
-    public User getSender() {
-        return sender;
+    public long getSenderId() {
+        return senderId;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
-    public Chat getChat() {
-        return chat;
+    public long getChatId() {
+        return chatId;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
     }
 
     public long getTimestamp() {
@@ -91,8 +89,8 @@ public class Message {
         return "Message{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", sender=" + sender +
-                ", chat=" + chat +
+                ", senderId=" + senderId +
+                ", chatId=" + chatId +
                 ", timestamp=" + timestamp +
                 '}';
     }

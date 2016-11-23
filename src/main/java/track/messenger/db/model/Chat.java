@@ -16,7 +16,8 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "chat_id")
     private Collection<Message> messages = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

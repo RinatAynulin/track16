@@ -30,4 +30,15 @@ public class DbService {
         return localInstance;
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public ChatService getChatService() {
+        return chatService;
+    }
+
+    public MessageService getMessageService() {
+        return messageService;
+    }
 }
