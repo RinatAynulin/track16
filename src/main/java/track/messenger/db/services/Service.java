@@ -1,6 +1,7 @@
 package track.messenger.db.services;
 
 import track.messenger.db.dao.Dao;
+import track.messenger.db.exceptions.DuplicateException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +16,7 @@ public abstract class Service<T, L extends Serializable> {
         this.dao = dao;
     }
 
-    public void persist(T entity) {
-        //todo add try block and rethrow DbException
+    public void persist(T entity) throws DuplicateException {
         dao.openSessionWithTransaction();
         dao.persist(entity);
         dao.closeSessionWithTransaction();

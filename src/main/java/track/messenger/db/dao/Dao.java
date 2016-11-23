@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.exception.ConstraintViolationException;
+import track.messenger.db.exceptions.DuplicateException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -62,8 +64,12 @@ public abstract class Dao<T, L extends Serializable> implements DaoInterface<T, 
         this.transaction = transaction;
     }
 
-    public void persist(T entity) {
-        getSession().save(entity);
+    public void persist(T entity) throws DuplicateException {
+        try {
+            getSession().save(entity);
+        } catch (ConstraintViolationException e) {
+            throw new DuplicateException(e);
+        }
     }
 
     public void update(T entity) {
